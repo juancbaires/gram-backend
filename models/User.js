@@ -1,7 +1,6 @@
 const mongoose = require('../db/connection.js')
 const Schema = mongoose.Schema
-//TODO * passwords
-// const bcrypt = require('bcrypt-nodejs')
+const bcrypt = require('bcrypt-nodejs')
 
 const User = new mongoose.Schema({
     username: String,
@@ -9,5 +8,8 @@ const User = new mongoose.Schema({
     memes: []
 })
 
+User.methods.validPassword = function (password) {
+    return bcrypt.compareSync(password, this.password)
+}
 
 module.exports = mongoose.model('User', User)

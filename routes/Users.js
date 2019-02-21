@@ -4,13 +4,14 @@ const jwt = require('jwt-simple')
 const passport = require('../config/passport')
 const config = require('../config/config')
 const User = require('../models/User')
-const bycript = require('bycrypt-nodejs')
+const bcrypt = require('bcrypt-nodejs')
 const jwtDecode = require('jwt-decode')
 
 
 // have acces to user at main page
 
-router.get('/', (req, res) => {
+router.get('/home', (req, res) => {
+    console.log('hey')
     User.find()
         .then(users => {
             res.json(users)
@@ -22,12 +23,12 @@ router.get('/', (req, res) => {
 
 // handle signup
 
-router.post('/signup', req, res => {
-    if (req.user.id && req.user.password) {
+router.post('/signup', (req, res) => {
+    if (req.body.username && req.body.password) {
         let newUser = {
             username: req.body.username,
             password: bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(8), null),
-            memes: req.body.memes
+            memes: req.body.memes,
         }
         User.findOne({ username: req.body.username }).then(user => {
             if (!user) {
@@ -39,36 +40,42 @@ router.post('/signup', req, res => {
                             memes: user.memes
                         }
                         let token = jwt.encode(payload, config.jwtSecret)
-                        res.json({ token: token })
+                        res.json({
+                            token: token
+                        })
                     } else {
-                        console.log('errorOne')
+                        console.log('error')
                         res.sendStatus(401)
                     }
                 })
             } else {
-                console.log('errorTwo')
+                console.log('why!')
                 res.sendStatus(401)
             }
         })
     } else {
-        console.log('errorThree')
+        console.log('please')
         res.sendStatus(401)
     }
 })
-
-// handle login 
-
+//USER LOGIN
 router.post('/login', (req, res) => {
     if (req.body.username && req.body.password) {
         User.findOne({ username: req.body.username }).then(user => {
-            if (user & user.validPassword(req.body.password)) {
-                let payload = {
-                    id: user.id,
-                    username: user.username,
-                    memes: user.memes
+            if (user) {
+                if (user.validPassword(req.body.password)) {
+                    var payload = {
+                        id: user.id,
+                        username: user.username,
+                        memes: user.memes
+                    }
+                    var token = jwt.encode(payload, config.jwtSecret)
+                    res.json({
+                        token: token
+                    })
+                } else {
+                    res.sendStatus(401)
                 }
-                let token = jwt.endcode(payload, config.jwtSecret)
-                res.json({ token: token });
             } else {
                 res.sendStatus(401)
             }
@@ -77,7 +84,6 @@ router.post('/login', (req, res) => {
         res.sendStatus(401)
     }
 })
-
 //find user and display
 
 router.get('/:id', (req, res) => {
@@ -91,3 +97,5 @@ router.get('/:id', (req, res) => {
         res.sendStatus(401)
     }
 });
+
+module.exports = router
