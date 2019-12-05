@@ -1,18 +1,25 @@
+const session = require('express-session')
 const express = require('express')
-const bodyParser = require('body-parser')
-
 const app = express()
-
 const cors = require('cors')
+const bodyParser = require('body-parser')
+const dotenv = require('dotenv')
+const userRoutes = require('./routes/user')
 
-app.set('port', process.env.PORT || 3001)
-app.use(bodyParser.json());
+
+dotenv.config()
+
+if (app.get('env') === 'production') {
+    sess.cookie.secure = true
+}
+
+const port = process.env.PORT || 3000
+// app.use(bodyParser.json());
+app.use(express.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
+app.use('/users', userRoutes)
 
-
-app.get('/', (req, res) => res.send('Hello World!'))
-
-
-app.listen(app.get('port'), () => {
-    console.log('Server listening on port ' + app.get('port'))
-})
+app.listen(port, () => {
+    console.log(`Server started on port${port}`);
+});

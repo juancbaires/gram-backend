@@ -1,14 +1,35 @@
 const User = require('../models/User')
+const Comment = require('../models/Comment')
+const Post = require('../models/Post')
+const mongoose = require('mongoose')
+
+// User.find({}).remove(() => {
+//     const juan = User.create({
+//         username: 'juan',
+//         password: 'juan',
+//     }).then(user => {
+//         console.log('saved', user)
+//     }).catch(err => console.log())
+// })
+
+Post.find({}).remove(() => {
+    let post = Post.create({
+        content: 'This is the post content, like facebook post!',
+        Date: Date.now(),
+        author: '5de661a49244ef142d95d08d',
+        img: 'String.jpeg',
+    }).then((item) => {
+        console.log(item, 'ITEM')
+    }).catch(error => console.log('Seed Error', error))
+})
 
 
-User.find({}).remove(() => {
-    let juan = User.create({
-        username: 'juan',
-        password: 'juan',
-        memes: ['https://www.google.com/url?sa=i&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwjzztTh17fgAhVMhuAKHR8qBXgQjRx6BAgBEAU&url=https%3A%2F%2Fimgflip.com%2Fmemetemplates&psig=AOvVaw1lesRaxs1XXb5fCz6KCdPj&ust=1550112114826172', 'https://www.google.com/url?sa=i&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwiqhKHo17fgAhXKnOAKHQ8NCg4QjRx6BAgBEAU&url=%2Furl%3Fsa%3Di%26source%3Dimages%26cd%3D%26ved%3D%26url%3Dhttps%253A%252F%252Fme.me%252Fi%252Fwalking-into-an-empty-gym-like-ama-its-a-beautiful-18396700%26psig%3DAOvVaw1lesRaxs1XXb5fCz6KCdPj%26ust%3D1550112114826172&psig=AOvVaw1lesRaxs1XXb5fCz6KCdPj&ust=1550112114826172']
-    }).then(() => {
-        User.save(err => {
-            console.log(err)
-        })
-    })
+Comment.find({}).remove(() => {
+    let comment = Comment.create({
+        author: '5de661a49244ef142d95d08d',
+        content: "this is the comment!",
+        Date: Date.now(),
+    }).then((com) => {
+        console.log(com)
+    }).catch(err => console.log(err))
 })
