@@ -1,10 +1,8 @@
 const User = require("../models/User");
 require("mongoose");
-const jwt = require("jwt-simple");
-const passport = require("../auth/passport");
-const config = require("../auth/config");
+// const passport = require("../auth/passport");
+// const config = require("../auth/config");
 const bcrypt = require("bcrypt-nodejs");
-const jwtDecode = require("jwt-decode");
 
 // post request to signup
 exports.create = async function(req, res) {
