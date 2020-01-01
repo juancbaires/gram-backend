@@ -1,10 +1,9 @@
 const User = require("../models/User");
-require("mongoose");
-const bcrypt = require("bcrypt-nodejs");
+// const mongoose = require("mongoose");
 
 // post request to signup
-exports.create = async function(req, res) {
-  const user = new User();
+exports.create = async (req, res) => {
+  const user = new User(req.body);
   try {
     await user.save();
     const token = await user.generateAuthToken();
@@ -21,10 +20,12 @@ exports.login = async (req, res) => {
       req.body.username,
       req.body.password
     );
+    console.log("here user");
     const token = await user.generateAuthToken();
     res.send({ user, token });
-  } catch (error) {
-    res.status(400).send(error);
+  } catch (e) {
+    console.log("here error");
+    res.status(400).send(e.message);
   }
 };
 
@@ -35,7 +36,6 @@ exports.logout = async (req, res) => {
       return token.token !== req.token;
     });
     await req.user.save();
-    res.send();
   } catch (error) {
     res.status(500).send(error);
   }

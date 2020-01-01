@@ -3,9 +3,13 @@ const User = require("../models/User");
 
 const auth = async (req, res, next) => {
   try {
+    console.log("hit auth");
     const token = req.header("Authorization").replace("Bearer ", "");
-    const decode = jwt.verify(token, "thisisgram");
-    const user = await User.findOne({ _id: decode._id, "tokens.token": token });
+    const decoded = jwt.verify(token, "thisisgram");
+    const user = await User.findOne({
+      _id: decoded._id,
+      "tokens.token": token
+    });
 
     if (!user) {
       throw new Error();
@@ -14,8 +18,9 @@ const auth = async (req, res, next) => {
     req.token = token;
     req.user = user;
     next();
-  } catch (error) {
-    console.log(error);
-    res.status(401).send({ error: "Please Authenticate" });
+  } catch (e) {
+    res.status(401).send({ error: "Please authenticate." });
   }
 };
+
+module.exports = auth;
