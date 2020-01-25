@@ -27,6 +27,27 @@ const User = new mongoose.Schema({
     }
   ]
 });
+
+// add a virtual attribute
+userSchema.virtual("posts", {
+  ref: "Post",
+  localField: "_id",
+  foreignField: "owner"
+});
+
+/** change the user object that is returned to protect user privacy */
+User.methods.toJSON = function() {
+  const user = this;
+  const userObj = user.toObject();
+
+  // NOTE: remove fields that I dont want inlcuded in user object.
+
+  delete userObj.password;
+  delete userObj.tokens;
+
+  return userObj;
+};
+
 // Find by credentials middleware to find user quicker
 User.statics.findByCredentials = async (username, password) => {
   const user = await mongoose.model("User").findOne({ username: username });

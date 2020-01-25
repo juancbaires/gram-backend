@@ -15,6 +15,7 @@ exports.create = async (req, res) => {
 
 // login function
 exports.login = async (req, res) => {
+  console.log("Hit the first of many functions to run!");
   try {
     const user = await User.findByCredentials(
       req.body.username,
@@ -58,6 +59,7 @@ exports.getOwnProfile = async (req, res) => {
 };
 
 // this is found by ID. To see other profiles etc..
+// *TODO* - create middlewate that returns, only necessary information.
 exports.GetUser = async (req, res) => {
   const _id = req.params.id;
 
@@ -84,13 +86,9 @@ exports.updateUser = async (req, res) => {
   if (!isValid) {
     res.status(400).send({ error: "Invalid Updates" });
   }
-
   try {
-    const user = await User.findById(req.params.id);
-
-    updates.forEach(update => (user[update] = req.body[update]));
-
-    await user.save();
+    updates.forEach(update => (req.user[update] = req.body[update]));
+    await req.user.save();
 
     if (!user) {
       return res.status(404).send();
@@ -101,17 +99,11 @@ exports.updateUser = async (req, res) => {
   }
 };
 
-// delete user by ID
-
+// delete user by ID (route tested and functional on postman.)
 exports.deleteUser = async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
-
-    if (!user) {
-      return res.status(404).send();
-    }
-
-    res.send(user);
+    await req.user.remove();
+    res.send(req.user);
   } catch (e) {
     res.status(500).send();
   }
