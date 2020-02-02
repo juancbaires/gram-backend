@@ -67,4 +67,16 @@ exports.updatePost = async (req, res) => {
 // delete a post
 // requires auth middleware
 
-exports.deletePost = async (req, res) => {};
+exports.deletePost = async (req, res) => {
+  const _id = req.params._id;
+  try {
+    const post = await Post.findOne({ _id, owner: req.user._id });
+    if (!post) {
+      res.status(404).send("post not found");
+    }
+    post.remove();
+    res.status(200).send("post was deleted");
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
