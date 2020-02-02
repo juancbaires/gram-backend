@@ -2,6 +2,7 @@ const Post = require("../models/Post");
 const mongoose = require("mongoose");
 
 // createt a post
+// works on postman and creates adds user id to it.
 exports.create = async (req, res) => {
   const post = new Post({
     ...req.body,
@@ -17,17 +18,21 @@ exports.create = async (req, res) => {
 
 // requires auth middleware
 // Get all posts to a single user
+// tested in postman and retrieves all post that belong the current user.
 exports.getPosts = async (req, res) => {
   try {
-    await req.user.populte("posts").execPopulate();
+    ("hitting here again???!!");
+    await req.user.populate("posts").execPopulate();
     res.status(200).send(req.user.posts);
   } catch (error) {
-    res.send(500).send(error.message);
+    res.status(500).send();
   }
 };
 // Get a single post from a user
 // requires auth middleware
+// Tested and function with id, returns error for wrong id in postman
 exports.getSinglePost = async (req, res) => {
+  console.log("hitting the right function");
   const _id = req.params.id;
   try {
     const post = await Post.findOne({ _id, owner: req.user._id });
@@ -42,22 +47,20 @@ exports.getSinglePost = async (req, res) => {
 
 // update a single post
 // requires auth middleware
+// this successfully works on postman and updates based on user id, post id and allowed possible updates
 exports.updatePost = async (req, res) => {
   const updates = Object.keys(req.body);
-  const allowedUpdates = ["content", "timeStamp", "img", "comments"];
-  const isValid = updates.every(update => {
-    allowedUpdates.includes(update);
-  });
+  const allowedUpdates = ["content", "img", "comments"];
+  const isValid = updates.every(update => allowedUpdates.includes(update));
 
   if (!isValid) {
     return res.status(404).send({ error: "invalid update!" });
   }
-
+  const _id = req.params.id;
   try {
-    const _id = req.params.id;
     const post = await Post.findOne({ _id, owner: req.user._id });
-    updates.forEach(udpate => (post[update] = req.body[update]));
-    await post.save;
+    updates.forEach(update => (post[update] = req.body[update]));
+    await post.save();
     res.send(post);
   } catch (error) {
     res.status(500).send(error.message);
@@ -66,16 +69,17 @@ exports.updatePost = async (req, res) => {
 
 // delete a post
 // requires auth middleware
-
+// Works on post man with bearer token.
 exports.deletePost = async (req, res) => {
-  const _id = req.params._id;
+  const _id = req.params.id;
   try {
     const post = await Post.findOne({ _id, owner: req.user._id });
+    console.log(post);
     if (!post) {
-      res.status(404).send("post not found");
+      res.status(404).send();
     }
     post.remove();
-    res.status(200).send("post was deleted");
+    res.status(200).send();
   } catch (error) {
     res.status(500).send(error.message);
   }

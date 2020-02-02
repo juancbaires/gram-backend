@@ -7,7 +7,7 @@ const Post = new mongoose.Schema({
     type: String,
     required: true
   },
-  timeStamp: Date,
+  time: { type: Date, default: Date.now },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,

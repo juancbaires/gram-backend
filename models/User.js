@@ -17,7 +17,6 @@ const User = new mongoose.Schema({
       }
     }
   },
-  posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   tokens: [
     {
       token: {
@@ -29,7 +28,7 @@ const User = new mongoose.Schema({
 });
 
 // add a virtual attribute
-userSchema.virtual("posts", {
+User.virtual("posts", {
   ref: "Post",
   localField: "_id",
   foreignField: "owner"
