@@ -7,14 +7,15 @@ const Post = new mongoose.Schema({
     type: String,
     required: true
   },
-  time: { type: Date, default: Date.now },
+  timeStamp: Date,
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: "User"
   },
   img: String,
-  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }]
+  imgID: String,
+  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }]
 });
 
 module.exports = mongoose.model("Post", Post);

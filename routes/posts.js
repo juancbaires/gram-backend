@@ -2,8 +2,10 @@ const express = require("express");
 const Router = new express.Router();
 const auth = require("../middleware/auth");
 const postController = require("../controllers/postController");
+const multipart = require("connect-multiparty");
+const multipartMiddleware = multipart();
 
-Router.post("/new-post", auth, postController.create);
+Router.post("/new-post", auth, multipartMiddleware, postController.create);
 Router.get("/allposts", auth, postController.getPosts);
 Router.get("/:id", auth, postController.getSinglePost);
 Router.patch("/:id", auth, postController.updatePost);

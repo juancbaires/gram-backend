@@ -1,19 +1,31 @@
 const Post = require("../models/Post");
 const mongoose = require("mongoose");
+const cloudinary = require("cloudinary");
+const dotenv = require("dotenv").config(__dirname, "../.env");
+cloudinary.config({
+  cloud_name: "juansito",
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 // createt a post
 // works on postman and creates adds user id to it.
 exports.create = async (req, res) => {
-  const post = new Post({
-    ...req.body,
-    owner: req.user._id
+  cloudinary.uploader.upload(req.files["image\n"].path, async function(result) {
+    console.log(result);
+    const post = new Post({
+      ...req.body,
+      owner: req.user._id,
+      img: result.url,
+      imgID: result.public_id
+    });
+    try {
+      await post.save();
+      res.status(201).send(post);
+    } catch (error) {
+      res.status(400).send(error);
+    }
   });
-  try {
-    await post.save();
-    res.status(201).send(post);
-  } catch (error) {
-    res.status(400).send();
-  }
 };
 
 // requires auth middleware
