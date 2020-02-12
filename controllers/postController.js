@@ -2,6 +2,7 @@ const Post = require("../models/Post");
 const mongoose = require("mongoose");
 const cloudinary = require("cloudinary");
 const dotenv = require("dotenv").config(__dirname, "../.env");
+
 cloudinary.config({
   cloud_name: "juansito",
   api_key: process.env.CLOUDINARY_API_KEY,

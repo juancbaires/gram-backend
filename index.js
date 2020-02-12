@@ -13,7 +13,7 @@ if (app.get("env") === "production") {
 }
 dotenv.config({ path: __dirname + "/.env" });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 app.use(bodyParser.json());
 app.use(express.json());
