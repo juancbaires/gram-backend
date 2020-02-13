@@ -32,6 +32,7 @@ exports.login = async (req, res) => {
 
 // logout function (out of current device)
 exports.logout = async (req, res) => {
+  console.log("hit LOGOUT CONTROLLER");
   try {
     req.user.tokens = req.user.tokens.filter(token => {
       return token.token !== req.token;

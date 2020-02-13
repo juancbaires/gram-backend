@@ -97,3 +97,14 @@ exports.deletePost = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
+
+exports.allpostHome = async (req, res) => {
+  const posts = await Post.find({});
+  try {
+    if (posts) {
+      res.status(200).send(posts);
+    }
+  } catch (error) {
+    res.send(404).send(error.message);
+  }
+};

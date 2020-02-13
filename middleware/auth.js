@@ -5,12 +5,13 @@ const auth = async (req, res, next) => {
   try {
     console.log("hit auth");
     const token = req.header("Authorization").replace("Bearer ", "");
+    console.log(token);
     const decoded = jwt.verify(token, "thisisgram");
     const user = await User.findOne({
       _id: decoded._id,
       "tokens.token": token
     });
-
+    console.log(user, "HERE");
     if (!user) {
       throw new Error();
     }

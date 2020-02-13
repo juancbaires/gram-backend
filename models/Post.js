@@ -13,6 +13,7 @@ const Post = new mongoose.Schema({
     required: true,
     ref: "User"
   },
+  ownerName: String,
   img: String,
   imgID: String,
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }]
