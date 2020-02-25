@@ -12,8 +12,7 @@ cloudinary.config({
 // createt a post
 // works on postman and creates adds user id to it.
 exports.create = async (req, res) => {
-  cloudinary.uploader.upload(req.files["image\n"].path, async function(result) {
-    console.log(result);
+  cloudinary.uploader.upload(req.files.image.path, async function(result) {
     const post = new Post({
       ...req.body,
       owner: req.user._id,
@@ -24,6 +23,7 @@ exports.create = async (req, res) => {
       await post.save();
       res.status(201).send(post);
     } catch (error) {
+      console.log(error);
       res.status(400).send(error);
     }
   });
@@ -99,12 +99,13 @@ exports.deletePost = async (req, res) => {
 };
 
 exports.allpostHome = async (req, res) => {
-  const posts = await Post.find({});
+  const posts = await Post.find({}).populate("comments");
+  // posts.populate("comments").execPopulate();
   try {
     if (posts) {
-      res.status(200).send(posts);
+      res.send(posts);
     }
   } catch (error) {
-    res.send(404).send(error.message);
+    res.status(404).send(error.message);
   }
 };

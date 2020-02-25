@@ -56,6 +56,7 @@ exports.logoutAll = async (req, res) => {
 
 // See users own profile
 exports.getOwnProfile = async (req, res) => {
+  console.log("send this user");
   res.send(req.user);
 };
 
