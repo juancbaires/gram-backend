@@ -83,12 +83,23 @@ exports.updatePost = async (req, res) => {
 // delete a post
 // requires auth middleware
 // Works on post man with bearer token.
+// **TODO** Need to set up cloud to delete picture too.
+// cloudinary.v2.uploader.destroy('sample', function(error,result) {
+// console.log(result, error) });
+// result => "ok" (should return this if successful)
 exports.deletePost = async (req, res) => {
+  console.log("hit");
   const _id = req.params.id;
   try {
     const post = await Post.findOne({ _id, owner: req.user._id });
     console.log(post);
     if (!post) {
+      res.status(404).send();
+    }
+    const cloud = await cloudinary.v2.uploader.destroy(post.imgID);
+    const { result } = cloud;
+    console.log(result);
+    if (!cloud) {
       res.status(404).send();
     }
     post.remove();

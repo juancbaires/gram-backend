@@ -3,6 +3,7 @@ const User = require("../models/User");
 
 const auth = async (req, res, next) => {
   console.log("HIT AUTH!");
+  console.log(req.headers);
   try {
     const token = req.header("Authorization").replace("Bearer ", "");
     const decoded = jwt.verify(token, "thisisgram");
